@@ -1,0 +1,32 @@
+
+syntax = "proto3"
+
+//Data format of Message
+message Greeting {
+    String first_name = 1;
+}
+
+//Data for Request
+message GreetRequest {
+    Greeting greeting = 1;
+}
+
+// Data for Response
+message GreetResponse {
+    string result = 1;
+}
+
+// Service (Service name and RPC endpoints). API endpoints generates the code for us.
+service GreetService {
+    //Unary: Single request from client and Single response from Server
+    rpc Greet(GreetRequest) returns (GreetResponse) {};
+
+    //Streaming server: Client sends a request and server returns a stream of response
+    rpc GreetManyTimes(GreetManyTimesRequest) returns (stream GreetManyTimesResponse) {};
+
+    //Streaming client: Client sends a stream of requests and server sends a response.
+    rpc LongGreet(stream LongGreetRequest) returns (LongGreetResponse) {};
+
+    // Bi Directional streaming: Client sends a stream of requests and server returns a stream of responses
+    rpc GreetEveryone(stream GreetEveryoneRequest) returns (stream GreetEveryoneResponse) {};
+}

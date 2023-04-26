@@ -1,0 +1,78 @@
+syntax = "proto3";
+import "common.proto";
+
+
+message StepSize {
+  float step_size_mv = 1;  // Step size of TC voltage step in stabilization algorithm
+}
+
+message GdRate {
+  float gd_rate = 1;  // Learning rate of the gradient descent algorithm
+}
+
+message FrequencyThreshold {
+  enum Threshold {
+    START = 0;  // Threshold for measured frequency, which if exceeded triggers the stabilization algorithm
+    STOP = 1;  // Threshold below which the algorithm pauses
+    FIXED = 2;  // Threshold which determines how the step size is calculated
+    FAULTY = 3;  // Threshold, below which the measurement value is not trusted and an indication that we are outside the measureable range
+  }
+  Threshold threshold = 1;  // Relevant threshold
+  float frequency_mhz = 2;  // Its value in MHz
+}
+
+message EndNodeVoltage {
+  enum EndNode {
+    ALICE = 0;
+    BOB = 1;
+  }
+  EndNode end_node = 1;
+  float voltage = 2; // in V
+}
+
+message Interval {
+  uint32 interval = 1;  // Duration in seconds between successive frequency measurements iff the measured frequency is below the "start" threshold
+}
+
+message StartRequest {}
+
+message StopRequest {}
+
+message ScanRequest {
+  float start = 1;  // Start voltage of the scan measurement, which sweeps the TC voltage and measures beat frequency
+  float stop = 2;  // Stop voltage
+  float step = 3;  // Voltage step size
+}
+
+message ScanResultLocationRequest {}
+
+message ScanResultLocation {
+  string reply = 1;  // Contains location of file where the result of the scan measurement is stored
+}
+
+message ShowRequest {}
+
+message ShowReply {
+  string reply = 1;  // Formatted string containing current configuration and measurement data
+}
+
+message LastMeasuredFrequencyRequest {}
+
+message LastMeasuredFrequency {
+  float frequency_mhz = 1;  // Last measured frequency
+}
+
+service FreqStabManagement {
+  rpc set_step_size (StepSize) returns (AckReply);
+  rpc set_gd_rate (GdRate) returns (AckReply);
+  rpc set_max_step (StepSize) returns (AckReply);
+  rpc set_threshold (FrequencyThreshold) returns (AckReply);
+  rpc set_end_node_voltage (EndNodeVoltage) returns (AckReply);
+  rpc set_interval (Interval) returns (AckReply);
+  rpc start (StartRequest) returns (AckReply);
+  rpc stop (StopRequest) returns (AckReply);
+  rpc scan (ScanRequest) returns (AckReply);
+  rpc scan_result_location (ScanResultLocationRequest) returns (ScanResultLocation);
+  rpc show (ShowRequest) returns (ShowReply);
+  rpc last_measured_frequency (LastMeasuredFrequencyRequest) returns (LastMeasuredFrequency);
+}

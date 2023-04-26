@@ -1,0 +1,138 @@
+syntax = "proto3";
+import "common.proto";
+
+message GetDacVoltagesRequest {}
+
+message GetDacVoltagesReply {
+  float im1 = 1;
+  float im2 = 2;
+  float im1_er = 3;
+  float attn1 = 4;
+  float attn2 = 5;
+  float tc_ena = 6;
+  float tc_dac = 7;
+  float vmax_im1 = 8;
+  float vmin_im1 = 9;
+  float vmax_im2 = 10;
+  float vmin_im2 = 11;
+}
+
+message SetDacVoltageRequest {
+  enum Device {
+    IM1 = 0;
+    IM2 = 1;
+    IM1_ER = 2;
+    ATTN1 = 3;
+    ATTN2 = 4;
+    TC_ENABLE = 5;
+  }
+  Device device = 1;
+  float voltage = 2;
+}
+
+message FindDelayRequest {
+  uint32 min_pow = 1;  // Check from delay +- 2**(min_pow - 1)
+  uint32 max_pow = 2;  // Check up to delay +- 2**(max_pow - 1)
+  bool program = 3;  // Correct the delay by recompiling and reprogramming. If false, do a dry run
+}
+
+message FindDelayReply {
+  string reply = 1;  // Contains status of the find_delay routine
+}
+
+message SetQpcDebugRequest {
+  bool on = 1;
+}
+
+message ImBiasOffsetRequest {
+  uint32 counter = 1;
+  uint32 channel = 2;
+  float v_off_start = 3;
+  float v_off_stop = 4;
+  uint32 num = 5;
+}
+
+message BiasSweepSequenceRequest {
+  uint32 counter = 1;
+  float v_off_start = 2;
+  float v_off_stop = 3;
+  uint32 num = 4;
+}
+
+message PhasePulseTimeSweep {
+  uint32 start = 1;
+  uint32 stop = 2;
+  uint32 step = 3;
+  uint32 counter = 4;
+  uint32 channel = 5;
+}
+
+message PhasePulseAmpSweep {
+  float start = 1;
+  float stop = 2;
+  uint32 num = 3;
+  uint32 counter = 4;
+  uint32 channel = 5;
+}
+
+message SetRFDacsTimesRequest {
+  enum Board {
+    EARLY = 0;
+    LATE = 1;
+    PHASE = 2;
+  }
+  Board board = 1;
+  uint32 rise = 2;  // Pulse rise time in ps
+  uint32 fall = 3;  // Pulse fall time in ps
+}
+
+message GetRFDacsTimesRequest {
+  enum Board {
+    EARLY = 0;
+    LATE = 1;
+    PHASE = 2;
+  }
+  Board board = 1;
+}
+
+message RFDacsTimes {
+  uint32 rise = 1;  // Pulse rise time in ps
+  uint32 fall = 2;  // Pulse fall time in ps
+}
+
+message SweepRequest {
+  enum Device {
+    IM1 = 0;
+    IM2 = 1;
+    IM1_ER = 2;
+    ATTN1 = 3;
+    ATTN2 = 4;
+    TC_ENABLE = 5;
+  }
+  Device device = 1;
+  float start = 2;  // Start voltage
+  float stop = 3;  // Stop voltage (inclusive)
+  uint32 num = 4;  // Number of steps
+}
+
+message GetPhaseAmpRequest {}
+
+message PhaseAmpMsg {
+  float amp = 1;  // Amplitude relative to max possible amplitude of phase pulse
+}
+
+service HalEndManagement {
+  rpc get_dac_voltages (GetDacVoltagesRequest) returns (GetDacVoltagesReply);
+  rpc set_dac_voltage (SetDacVoltageRequest) returns (AckReply);
+  rpc find_delay (FindDelayRequest) returns (stream FindDelayReply);
+  rpc set_set_qpc_debug_debug (SetQpcDebugRequest) returns (AckReply);
+  rpc get_pulse_gen_board_times (GetRFDacsTimesRequest) returns (RFDacsTimes);
+  rpc set_pulse_gen_board_times (SetRFDacsTimesRequest) returns (AckReply);
+  rpc get_phase_amp (GetPhaseAmpRequest) returns (PhaseAmpMsg);
+  rpc set_phase_amp (PhaseAmpMsg) returns (AckReply);
+  rpc im1_bias_offset_sweep (ImBiasOffsetRequest) returns (AckReply);
+  rpc bias_sweep_sequence (BiasSweepSequenceRequest) returns (AckReply);
+  rpc phase_pulse_time_sweep (PhasePulseTimeSweep) returns (AckReply);
+  rpc phase_pulse_amp_sweep (PhasePulseAmpSweep) returns (AckReply);
+  rpc sweep_dac4 (SweepRequest) returns (AckReply);
+}

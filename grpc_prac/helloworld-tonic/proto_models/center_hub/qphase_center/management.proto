@@ -1,0 +1,32 @@
+syntax = "proto3";
+import "common.proto";
+
+message StartQkdRequest {
+  uint32 blocks_per_stream = 1;
+}
+
+message StopQkdRequest {}
+
+message CalibrateRequest {
+  Link link = 1;
+  enum Calibration {
+    MOD = 0; // Internal intensity modulators
+    MPN = 1; // Tell ENs to calibrate MPN
+    POL = 2; // Calibrate polarization
+    CLK = 3; // Calibrate clock delay
+    ALL = 4;
+  }
+  Calibration calibration = 2;
+}
+
+message EndNodeInternCalib {
+  string end_node_alice = "Alice IP Address"; // Need to define the IP Address format
+  string end_node_bob = "Bob IP Address"; // Need to define the IP Address format
+}
+
+service QPhaseCenterManagement {
+  rpc prepare_end_nodes_internal_calib (EndNodeInternCalib) returns (AckReply);
+  rpc start_qkd (StartQkdRequest) returns (AckReply);
+  rpc stop_qkd (StopQkdRequest) returns (AckReply);
+  rpc calibrate (CalibrateRequest) returns (AckReply);
+}

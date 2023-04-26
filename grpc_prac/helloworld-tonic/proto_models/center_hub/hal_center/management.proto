@@ -1,0 +1,37 @@
+syntax = "proto3";
+import "common.proto";
+
+message SetClockDelayRequest {
+  Link link = 1;
+  uint32 delay = 2;  // Delay between 0 and 5000
+}
+
+message GetClockDelayRequest {}
+
+message ClockDelay {
+  uint32 alice = 1;  // Delay value of Alice channel
+  uint32 bob = 2;  // Delay value of Bob channel
+}
+
+message TcVoltage {
+  Link link = 1;  // Which end node the laser light goes to
+  float voltage = 2;  // Temperature controller voltage
+}
+
+message ScanClockDelayRequest {
+  Link link = 1;  // Which channel (alice/bob)
+  uint32 start = 2; // Start scan at this value
+  uint32 stop = 3;  // Stop scan at this value
+  uint32 step = 4;  // Step size
+}
+
+message ScanClockDelayReply {
+  string reply = 1;  // Formatted string containing result of clock delay scan measurement
+}
+
+service HalCenterManagement {
+  rpc set_clock_delay (SetClockDelayRequest) returns (AckReply);
+  rpc get_clock_delay (GetClockDelayRequest) returns (ClockDelay);
+  rpc scan_clock_delay (ScanClockDelayRequest) returns (ScanClockDelayReply);
+  rpc set_laser_tc_voltage (TcVoltage) returns (AckReply);
+}

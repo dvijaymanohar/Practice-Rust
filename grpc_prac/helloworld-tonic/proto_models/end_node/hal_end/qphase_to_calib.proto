@@ -1,0 +1,26 @@
+syntax = "proto3";
+import "common.proto";
+import "qubitparams.proto";
+
+
+message SetSignalZMpnRequest {
+  float mpn = 1; // Signal Z MPN during QKD (other MPNs are set by set_qpc_debug)
+}
+
+message BoostedCalibrationIntensityRequest {}
+
+message ResetIntensityRequest {}
+
+message ModulatorCalibrationRequest {}
+
+message MpnCalibrationRequest {}
+
+service QPhaseToCalibEnd {
+  rpc set_signal_z_mpn (SetSignalZMpnRequest) returns (AckReply);
+  rpc set_laser_tc_voltage (SetLaserTcVoltageRequest) returns (AckReply);
+  rpc get_laser_tc_voltage (GetLaserTcVoltageRequest) returns (GetLaserTcVoltageReply);
+  rpc boost_intensity_calibration (BoostedCalibrationIntensityRequest) returns (AckReply);
+  rpc reset_intensity (ResetIntensityRequest) returns (AckReply);
+  rpc calibrate_modulators (ModulatorCalibrationRequest) returns (AckReply);
+  rpc calibrate_mpn (MpnCalibrationRequest) returns (AckReply);
+}

@@ -1,0 +1,27 @@
+syntax = "proto3";
+import "common.proto";
+import "qubitparams.proto";
+
+message GetQpcStateRequest {}
+
+message set_qpc_debugMeasuredStateReply {
+  enum State {
+    IDLE = 0;
+    BUSY = 1;
+  }
+  State state = 1;
+}
+
+message QubitParamsRequest {}
+
+message QubitParams {
+  MeanPhotonNumbers mpn = 1;
+  LevelDistribution levels = 2;
+}
+
+service QPhaseToQpcEnd {
+  rpc set_hardware_state (SetHardwareStateRequest) returns (AckReply);
+  rpc get_qpc_state (GetQpcStateRequest) returns (set_qpc_debugMeasuredStateReply);
+  rpc get_qubit_params (QubitParamsRequest) returns (QubitParams);
+  rpc shift_coarse_delay (ShiftQpcCoarseDelayRequest) returns (AckReply);
+}

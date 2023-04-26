@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package postprocessing;
+
+import "qubitparams.proto";
+
+enum StatusCode {
+    ACCEPTED = 0;
+    REJECTED = 1;
+    ERROR = 2;
+  }
+
+message AckMessage {
+  StatusCode status = 1;
+  string message = 2;
+}
+
+message StreamHeader {
+  string stream_id = 1;
+}
+
+message Block {
+  string stream_id = 1;  // Stream id of this production block
+  uint32 block_num = 2;  // Production block id
+  bytes qubits = 3;  // Quantum data
+  uint64 qubits_sent = 4;  // How many qubits were sent during collection of this production block
+  MeanPhotonNumbers mpn = 5;  // All mean photon numbers of the qubit states
+  LevelDistribution levels = 6;  // Proportion of each qubit state
+}
+
+message StreamCloseMsg {
+  string stream_id = 1;
+}
+
+service QuantumDataSender {
+  rpc send_block(Block) returns (AckMessage);
+  rpc close_stream(StreamCloseMsg) returns (AckMessage);
+}

@@ -1,0 +1,51 @@
+syntax = "proto3";
+import "common.proto";
+
+message PrepareQkdRequest {}
+
+message StartQkdStreamRequest {
+  string stream_id = 1;
+}
+
+message StopQkdStreamRequest {
+  string stream_id = 1;
+}
+
+message StartQkdBlockRequest {
+  string stream_id = 1;
+  uint32 sequence_no = 2;  // Production block id
+}
+
+message StopQkdBlockRequest {
+  string stream_id = 1;
+  uint32 sequence_no = 2;  // Production block id
+}
+
+message QpcStatusRequest {}
+
+message QpcStatusReply {
+  enum Status {
+    IDLE = 0;
+    BUSY = 1;
+  }
+  Status status = 1;
+}
+
+message EndNodeModulatorsCalibrationRequest {}
+
+message EndNodeMpnCalibrationRequest {}
+
+service CenterToEnd {
+  rpc set_laser_tc_voltage (SetLaserTcVoltageRequest) returns (AckReply);
+  rpc get_laser_tc_voltage (GetLaserTcVoltageRequest) returns (GetLaserTcVoltageReply);
+  rpc shift_en_coarse_delay (ShiftQpcCoarseDelayRequest) returns (AckReply);
+  rpc set_hardware_state (SetHardwareStateRequest) returns (AckReply);
+  rpc prepare_qkd (PrepareQkdRequest) returns (AckReply);
+  rpc start_qkd_stream (StartQkdStreamRequest) returns (AckReply);
+  rpc stop_qkd_stream (StopQkdStreamRequest) returns (AckReply);
+  rpc start_qkd_block (StartQkdBlockRequest) returns (AckReply);
+  rpc stop_qkd_block (StopQkdBlockRequest) returns (AckReply);
+  rpc get_qpc_status (QpcStatusRequest) returns (QpcStatusReply);
+  rpc do_modulators_calibration (EndNodeModulatorsCalibrationRequest) returns (AckReply);
+  rpc do_mpn_calibration (EndNodeMpnCalibrationRequest) returns (AckReply);
+}

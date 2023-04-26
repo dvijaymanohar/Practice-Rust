@@ -1,0 +1,7 @@
+syntax = "proto3";
+import "common.proto";
+
+
+service QpcToQphase {
+  rpc shift_en_coarse_delay (ShiftQpcCoarseDelayRequest) returns (AckReply);
+}

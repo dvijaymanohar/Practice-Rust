@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+message AckReply {}
+
+enum QpcTriggerMessage {
+  STOP = 0;
+  CAL_START = 1;
+  QKD_START = 2;
+}
+
+enum QpcState {
+  VAC = 0;
+  CAL = 1;
+  QKD = 2;
+}
+
+enum Link {
+  ALICE = 0;
+  BOB = 1;
+  BOTH = 2;
+}
+
+message ShiftQpcCoarseDelayRequest {
+  Link link = 1;  // Which end node
+  sint32 delta = 2;  // By how much to shift the round-trip delay programmed in the end node set_qpc_debug
+}
+
+message SetHardwareStateRequest {
+  QpcState state = 1;
+}
+
+message SetLaserTcVoltageRequest {
+  float voltage = 1;
+}
+
+message GetLaserTcVoltageReply {
+  float voltage = 1;
+}
+
+message GetLaserTcVoltageRequest {}

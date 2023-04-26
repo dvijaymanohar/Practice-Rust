@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+message GetSystemLoadRequest {
+  enum SystemLoad {
+    CPU = 0;
+    RAM = 1;
+    FS_USAGE = 2;
+  }
+
+  SystemLoad sys_property = 0;
+}
+
+message GetSystemLoadReply {
+  float val = 1;
+}
+
+message GetSystemInfoRequest {
+  enum SysInfo {
+    QPC_VERSION = 0;
+    KERNEL_VERSION = 1;
+    QPC_DRIVER_VERSION = 2;
+    CALIB_DRIVER_VERSION = 3;
+  }
+
+  SystemInfo sys_version = 0;
+}
+
+message GetSystemInfoReply {
+  float val = 1;
+}
+
+service SystemCenterManagement {
+  rpc get_system_load (GetSystemLoadRequest) returns (GetSystemLoadReply);
+  rpc get_system_info (GetSystemInfoRequest) returns (GetSystemInfoReply);
+}

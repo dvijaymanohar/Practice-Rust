@@ -1,0 +1,26 @@
+
+// Version of the proto
+syntax = "proto3";
+
+// Package name is used by gRPC library later on.
+package payments;
+
+// Define a service
+service Bitcoin {
+    // SendPayment method takes on Request and returns a response.
+    rpc SendPayment (BTCPaymentRequest) returns (BTCPaymentResponse);
+}
+
+// Request
+message BTCPaymentRequest {
+    string from_addr = 1;
+    string to_addr   = 2;
+    uint32 amount   = 3;
+}
+
+
+// Response
+message BTCPaymentResponse {
+    bool   successful = 1;
+    string message    = 2;
+}
