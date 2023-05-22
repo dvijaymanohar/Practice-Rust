@@ -3,9 +3,10 @@ name = "helloworld-tonic"
 version = "0.1.0"
 edition = "2021"
 
-#[[bin]] # Bin to run the HelloWorld gRPC server
-#name = "helloworld-server"
-#path = "src/server.rs"
+[[bin]] # Bin to run the HelloWorld gRPC server
+name = "helloworld-server"
+path = "src/server.rs"
+
 [[bin]] # Bin to run the HelloWorld gRPC client
 name = "helloworld-client"
 path = "src/client.rs"
@@ -13,7 +14,11 @@ path = "src/client.rs"
 [dependencies]
 tonic = "0.8"
 prost = "0.11"
-tokio = { version = "1.0", features = ["macros", "rt-multi-thread"] }
+# tokio = { version = "1.0", features = ["macros", "rt-multi-thread"] }
+tokio = { version = "1", features = ["full"] }
+lazy_static = "1.4.0"
+state_machine_future = "0.2.0"
 
+#
 [build-dependencies]
 tonic-build = "0.8"
