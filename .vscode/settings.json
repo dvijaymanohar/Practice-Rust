@@ -1,0 +1,9 @@
+{
+    "rust-analyzer.linkedProjects": [
+        "./concepts/Cargo.toml",
+        "./concepts/Cargo.toml",
+        "./concepts/Cargo.toml",
+        "./basic/Cargo.toml"
+    ],
+    "rust-analyzer.showUnlinkedFileNotification": false
+}

@@ -1,53 +1,25 @@
-use rusqlite::{Connection, Result};
+// fn main() {
+//     let text = "  hello, world!  ";
 
-// Struct representing a person entity
-#[derive(Debug)]
-struct Person {
-    id: i32,
-    name: String,
-    age: i32,
-}
+//     let trimmed = text
+//         .trim()
+//         .to_lowercase()
+//         .replace("world", "Rust")
+//         .trim_start_matches(' ')
+//         .trim_end_matches('!')
+//         .to_owned();
 
-fn main() -> Result<()> {
-    // Open a connection to the SQLite database
-    let conn = Connection::open_in_memory()?;
+//     println!("{}", trimmed);
+// }
 
-    // Create the "person" table
-    conn.execute(
-        "CREATE TABLE person (
-                  id INTEGER PRIMARY KEY,
-                  name TEXT NOT NULL,
-                  age INTEGER NOT NULL
-                  )",
-        [],
-    )?;
+fn main() {
+    let text = "  Hello, world!    ";
 
-    // Insert a person into the database
-    conn.execute(
-        "INSERT INTO person (name, age) VALUES (?1, ?2)",
-        &["Alice", "30"],
-    )?;
+    let trimmed_text = text
+        .trim()
+        .to_lowercase()
+        .replace("hello", "Rust")
+        .to_owned();
 
-    conn.execute(
-        "INSERT INTO person (name, age) VALUES (?1, ?2)",
-        &["VMD", "39"],
-    )?;
-
-    // Query all persons from the database
-    let mut stmt = conn.prepare("SELECT id, name, age FROM person")?;
-    let person_iter = stmt.query_map([], |row| {
-        Ok(Person {
-            id: row.get(0)?,
-            name: row.get(1)?,
-            age: row.get(2)?,
-        })
-    })?;
-
-    // Print the retrieved persons
-    for person_result in person_iter {
-        let person = person_result?;
-        println!("{:?}", person);
-    }
-
-    Ok(())
+    println!("Trimmed text: {}", trimmed_text);
 }
