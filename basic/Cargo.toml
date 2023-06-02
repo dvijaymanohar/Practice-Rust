@@ -12,3 +12,4 @@ memmap = "0.7.0"
 volatile = "0.4.4"
 clap = { version = "4.1.0", features = ["derive"] }
 math = "0.10.0"
+opencv = "0.78.0"
